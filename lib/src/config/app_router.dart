@@ -1,29 +1,34 @@
-import 'package:cats_app/src/presentation/screens/home_screen.dart';
-import 'package:flutter/material.dart';
+import 'package:cats_app/src/presentation/screens/catDetails/cat_details_screen.dart';
+import 'package:cats_app/src/presentation/screens/home/home_screen.dart';
+import 'package:get/get.dart';
+
+import '../presentation/screens/catDetails/cat_details_screen_binding.dart';
+import '../presentation/screens/home/home_binding.dart';
+import '../presentation/screens/splash/splash_binding.dart';
+import '../presentation/screens/splash/splash_screen.dart';
 
 class AppRouter {
-  static const String first = '/';
+  static const String splash = '/splash';
+  static const String home = '/home';
+  static const String catDetails = '/catDetails';
+}
 
-  static const routes = <Map<String, dynamic>>[
-    //ChekAuthScreen
-    {
-      'route': '/',
-      'screen': HomeScreen(),
-    },
+class AppPages {
+  static final pages = [
+    GetPage(
+      name: AppRouter.splash,
+      page: () => const SplashScreen(),
+      binding: SplashBinding(),
+    ),
+    GetPage(
+      name: AppRouter.home,
+      page: () => const HomeScreen(),
+      binding: HomeBinding(),
+    ),
+    GetPage(
+      name: AppRouter.catDetails,
+      page: () => const CatDetailsScreen(),
+      binding: CardDetailsBinding(),
+    ),
   ];
-
-  static Map<String, Widget Function(BuildContext)> getRoutes() {
-    Map<String, Widget Function(BuildContext)> appRoutes = {};
-    for (var route in routes) {
-      appRoutes[route['route']] = (context) => route['screen'];
-    }
-    return appRoutes;
-  }
-
-  // Generator of routes
-  static Route generateRoutes(RouteSettings settings) {
-    return MaterialPageRoute(
-      builder: (context) => const HomeScreen(),
-    );
-  }
 }

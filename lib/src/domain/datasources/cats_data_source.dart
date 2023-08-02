@@ -4,5 +4,5 @@ import '../models/cat.dart';
 
 abstract class CatsDataSource {
   Future<List<Cat>> getCats();
-  Future<List<CatImage>> getCatImages(String catId);
+  Future<CatImage> getCatImage(String catId);
 }

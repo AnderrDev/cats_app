@@ -7,16 +7,16 @@ String catImageToJson(List<CatImage> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class CatImage {
-  String id;
-  String url;
-  int width;
-  int height;
+  final String id;
+  final String url;
+  final int width;
+  final int height;
 
   CatImage({
-    required this.id,
-    required this.url,
-    required this.width,
-    required this.height,
+    this.id = '',
+    this.url = '',
+    this.width = 0,
+    this.height = 0,
   });
 
   factory CatImage.fromJson(Map<String, dynamic> json) => CatImage(

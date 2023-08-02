@@ -13,7 +13,6 @@ class TheCatApiDs extends CatsDataSource {
   @override
   Future<List<Cat>> getCats() async {
     final response = await dio.get('/breeds');
-    print("Response: ${response.statusCode}");
     if (response.statusCode == 200) {
       final List<Cat> cats = [];
       for (var item in response.data) {
@@ -21,23 +20,21 @@ class TheCatApiDs extends CatsDataSource {
       }
       return cats;
     }
-
     return [];
   }
 
   @override
-  Future<List<CatImage>> getCatImages(String catId) async {
+  Future<CatImage> getCatImage(String catId) async {
     final response = await dio.get('/images/search', queryParameters: {
       'breed_ids': catId,
     });
     if (response.statusCode == 200) {
-      final List<CatImage> images = [];
-      for (var item in response.data) {
-        images.add(CatImage.fromJson(item));
+      if (response.data.isEmpty) {
+        return CatImage();
       }
-      return images;
+      final CatImage image = CatImage.fromJson(response.data[0]);
+      return image;
     }
-
-    return [];
+    return CatImage();
   }
 }
