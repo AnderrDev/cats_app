@@ -28,7 +28,7 @@ class AppPages {
     GetPage(
       name: AppRouter.catDetails,
       page: () => const CatDetailsScreen(),
-      binding: CardDetailsBinding(),
+      binding: CatDetailsBinding(),
     ),
   ];
 }

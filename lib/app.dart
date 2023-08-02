@@ -13,7 +13,7 @@ class MainApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: AppTheme().getTheme(),
       debugShowCheckedModeBanner: false,
-      initialRoute: AppRouter.home,
+      initialRoute: AppRouter.splash,
       getPages: AppPages.pages,
       initialBinding: InitialBinding(),
     );

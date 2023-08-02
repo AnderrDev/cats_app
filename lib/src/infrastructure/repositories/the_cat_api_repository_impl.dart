@@ -14,6 +14,11 @@ class CatsRepositoryImpl extends CatsRepositoryInterface {
   }
 
   @override
+  Future<dynamic> getCatById(String breedId) async {
+    return await catsDataSource.getCatById(breedId);
+  }
+
+  @override
   Future<CatImage> getCatImage(String catId) async {
     return await catsDataSource.getCatImage(catId);
   }

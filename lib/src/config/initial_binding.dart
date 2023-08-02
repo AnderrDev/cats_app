@@ -9,7 +9,7 @@ class InitialBinding extends Bindings {
   void dependencies() {
     Get.lazyPut<HomeController>(() => HomeController(), fenix: true);
     Get.lazyPut<SplashController>(() => SplashController(), fenix: true);
-    Get.lazyPut<CardDetailsController>(() => CardDetailsController(),
+    Get.lazyPut<CatDetailsController>(() => CatDetailsController(),
         fenix: true);
   }
 }

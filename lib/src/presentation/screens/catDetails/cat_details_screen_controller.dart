@@ -1,9 +1,15 @@
+import 'package:cats_app/src/infrastructure/models/the_cat_api_response.dart';
 import 'package:get/get.dart';
 
-class CardDetailsController extends GetxController {
-  CardDetailsController();
+class CatDetailsController extends GetxController {
+  late CatData catData;
+  set setCatData(CatData catData) => this.catData = catData;
+  CatData get getCatData => catData;
 
-  final _obj = ''.obs;
-  set obj(value) => this._obj.value = value;
-  get obj => this._obj.value;
+  @override
+  void onInit() {
+    super.onInit();
+    setCatData = Get.arguments;
+    update();
+  }
 }

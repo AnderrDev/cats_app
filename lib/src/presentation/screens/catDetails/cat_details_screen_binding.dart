@@ -2,9 +2,9 @@ import 'package:get/get.dart';
 
 import 'cat_details_screen_controller.dart';
 
-class CardDetailsBinding implements Bindings {
+class CatDetailsBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<CardDetailsController>(() => CardDetailsController());
+    Get.lazyPut<CatDetailsController>(() => CatDetailsController());
   }
 }
