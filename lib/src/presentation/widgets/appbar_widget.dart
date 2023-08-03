@@ -1,11 +1,13 @@
+import 'package:cats_app/src/presentation/screens/home/home_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
+import '../delegates/search_cat_delegate.dart';
+
+class AppBarWidget extends GetWidget<HomeController>
+    implements PreferredSizeWidget {
   final String text;
-  final void Function()? onPressedBack;
-  final bool showBackButton;
   final bool centerTitle;
-  final void Function()? onPressedNotification;
   final Widget? action;
   final double height;
   final TextStyle? textStyle;
@@ -14,11 +16,8 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
   const AppBarWidget(
       {super.key,
       required this.text,
-      this.showBackButton = false,
       this.centerTitle = true,
       this.action,
-      this.onPressedBack,
-      this.onPressedNotification,
       this.height = 60.0,
       this.textStyle,
       this.backgroundColor = Colors.black});
@@ -38,20 +37,33 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
               ),
         ),
         actions: [
-          action ?? const SizedBox(),
+          //Show search delegate screen for search cats
+          IconButton(
+              onPressed: () {
+                showSearch(
+                    context: context,
+                    delegate:
+                        SearchCatDelegate(searchCat: controller.searchCatById));
+              },
+              icon: const Icon(
+                Icons.search,
+                color: Colors.black,
+                size: 30,
+              )),
         ],
         centerTitle: centerTitle,
-        leading: !showBackButton
-            ? null
-            : IconButton(
-                icon: const Icon(Icons.arrow_back_ios_rounded,
-                    color: Colors.black),
-                onPressed: onPressedBack ?? () => Navigator.pop(context),
-                color: Colors.white,
-                iconSize: 20,
-                splashColor: const Color.fromARGB(79, 224, 224, 224),
-                highlightColor: const Color.fromARGB(53, 189, 189, 189),
-              ),
+        leading: Container(
+          decoration: const BoxDecoration(
+            shape: BoxShape.circle,
+            color: Color(0xFF030A1A),
+          ),
+          margin: const EdgeInsets.only(left: 10.0),
+          child: Image.asset(
+            'assets/splash/splash_ico.png',
+            fit: BoxFit.contain,
+            color: const Color.fromARGB(255, 255, 255, 255),
+          ),
+        ),
         backgroundColor: backgroundColor, // Asignar un color de fondo al AppBar
         elevation: 0,
       ),

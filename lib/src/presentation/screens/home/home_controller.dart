@@ -13,7 +13,6 @@ class HomeController extends GetxController {
   final RxList<CatData> _catData = <CatData>[].obs;
   final RxList<CatData> _catDataFiltered = <CatData>[].obs;
   final RxBool _isLoading = false.obs;
-  final RxBool _isSearching = false.obs;
 
   final TextEditingController searchController = TextEditingController();
 
@@ -22,21 +21,23 @@ class HomeController extends GetxController {
   List<CatData> get catData => _catData;
   RxBool get isLoading => _isLoading;
   set setloading(bool value) => _isLoading.value = value;
-  RxBool get isSearching => _isSearching;
-  set setSearching(bool value) => _isSearching.value = value;
+
 
   @override
   void onInit() {
     super.onInit();
     _catsRepository = GetIt.I<CatsRepositoryInterface>();
-    _loadCats();
+    _loadCats(0);
   }
 
-  _loadCats() async {
+  _loadCats(int page) async {
     setloading = true;
     try {
-      final response = await _catsRepository.getCats();
+      // Get the cats from the repository
+      final response = await _catsRepository.getCats(page);
       _cats.value = response;
+
+      // Get the images for each cat
       for (var cat in _cats) {
         CatData data =
             CatData(catImage: await _loadImages(cat.id), catInfo: cat);
@@ -56,17 +57,16 @@ class HomeController extends GetxController {
     return response;
   }
 
-  searchCats(String query) async {
-    setSearching = true;
+  Future<List<CatData>> searchCatById(String query) async {
+    _catDataFiltered.clear();
     final response = await _catsRepository.getCatById(query);
-    if (response is Cat) {
-      Cat cat = response;
-      CatData data = CatData(catImage: await _loadImages(cat.id), catInfo: cat);
-      _catDataFiltered.add(data);
-    } else {
+    if (response != null) {
+      CatData data =
+          CatData(catImage: await _loadImages(response.id), catInfo: response);
       _catDataFiltered.clear();
+      _catDataFiltered.add(data);
+      return _catDataFiltered;
     }
-    setSearching = false;
-    update();
+    return _catDataFiltered;
   }
 }

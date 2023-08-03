@@ -14,14 +14,14 @@ class CatImage {
 
   CatImage({
     this.id = '',
-    this.url = '',
+    this.url = 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png',
     this.width = 0,
     this.height = 0,
   });
 
   factory CatImage.fromJson(Map<String, dynamic> json) => CatImage(
         id: json["id"],
-        url: json["url"],
+        url: json["url"] ?? 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png',
         width: json["width"],
         height: json["height"],
       );

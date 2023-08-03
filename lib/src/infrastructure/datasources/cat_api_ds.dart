@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cats_app/src/config/constants/environment.dart';
 import 'package:cats_app/src/domain/datasources/cats_data_source.dart';
 import 'package:cats_app/src/domain/models/cat_image.dart';
@@ -14,10 +12,11 @@ class TheCatApiDs extends CatsDataSource {
   ));
 
   @override
-  Future<List<Cat>> getCats() async {
+  Future<List<Cat>> getCats(int page) async {
     try {
       final response = await dio.get('/breeds', queryParameters: {
-        'limit': 15,
+        'limit': 16,
+        'page': page,
       });
       if (response.statusCode == 200) {
         final List<Cat> cats = [];
@@ -36,10 +35,9 @@ class TheCatApiDs extends CatsDataSource {
   }
 
   @override
-  Future<dynamic> getCatById(String breedId) async {
+  Future<Cat?> getCatById(String breedId) async {
     try {
       final response = await dio.get('/breeds/$breedId');
-      inspect(response);
       if (response.statusCode == 200) {
         if (response.data.isNotEmpty) {
           final Cat cat = Cat.fromJson(response.data);
@@ -51,7 +49,7 @@ class TheCatApiDs extends CatsDataSource {
         print(e);
       }
     }
-    return {};
+    return null;
   }
 
   @override
