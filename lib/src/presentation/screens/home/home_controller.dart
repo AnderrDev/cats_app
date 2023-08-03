@@ -14,6 +14,8 @@ class HomeController extends GetxController {
   final RxList<CatData> _catDataFiltered = <CatData>[].obs;
   final RxBool _isLoading = false.obs;
 
+  int catPage = 0;
+
   final TextEditingController searchController = TextEditingController();
 
   List<CatData> get catDataFiltered => _catDataFiltered;
@@ -22,12 +24,12 @@ class HomeController extends GetxController {
   RxBool get isLoading => _isLoading;
   set setloading(bool value) => _isLoading.value = value;
 
-
   @override
   void onInit() {
     super.onInit();
+    catPage = 0;
     _catsRepository = GetIt.I<CatsRepositoryInterface>();
-    _loadCats(0);
+    _loadCats(catPage);
   }
 
   _loadCats(int page) async {
@@ -35,6 +37,14 @@ class HomeController extends GetxController {
     try {
       // Get the cats from the repository
       final response = await _catsRepository.getCats(page);
+      if (response.isEmpty) {
+        setloading = false;
+        Get.showSnackbar(const GetSnackBar(
+          message: "No more cats to show",
+          duration: Duration(seconds: 2),
+        ));
+        return;
+      }
       _cats.value = response;
 
       // Get the images for each cat
@@ -50,6 +60,11 @@ class HomeController extends GetxController {
     }
     setloading = false;
     update();
+  }
+
+  loadMoreCats() async {
+    if (isLoading.value) return;
+    _loadCats(catPage++);
   }
 
   Future<CatImage> _loadImages(String catId) async {

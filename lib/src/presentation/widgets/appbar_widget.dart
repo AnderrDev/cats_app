@@ -24,49 +24,47 @@ class AppBarWidget extends GetWidget<HomeController>
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: AppBar(
-        toolbarHeight: height,
-        title: Text(
-          text,
-          style: textStyle ??
-              const TextStyle(
-                fontSize: 25,
-                fontWeight: FontWeight.w600,
-                color: Colors.black,
-              ),
-        ),
-        actions: [
-          //Show search delegate screen for search cats
-          IconButton(
-              onPressed: () {
-                showSearch(
-                    context: context,
-                    delegate:
-                        SearchCatDelegate(searchCat: controller.searchCatById));
-              },
-              icon: const Icon(
-                Icons.search,
-                color: Colors.black,
-                size: 30,
-              )),
-        ],
-        centerTitle: centerTitle,
-        leading: Container(
-          decoration: const BoxDecoration(
-            shape: BoxShape.circle,
-            color: Color(0xFF030A1A),
-          ),
-          margin: const EdgeInsets.only(left: 10.0),
-          child: Image.asset(
-            'assets/splash/splash_ico.png',
-            fit: BoxFit.contain,
-            color: const Color.fromARGB(255, 255, 255, 255),
-          ),
-        ),
-        backgroundColor: backgroundColor, // Asignar un color de fondo al AppBar
-        elevation: 0,
+    return AppBar(
+      toolbarHeight: height,
+      title: Text(
+        text,
+        style: textStyle ??
+            const TextStyle(
+              fontSize: 25,
+              fontWeight: FontWeight.w600,
+              color: Colors.black,
+            ),
       ),
+      actions: [
+        //Show search delegate screen for search cats
+        IconButton(
+            onPressed: () {
+              showSearch(
+                  context: context,
+                  delegate:
+                      SearchCatDelegate(searchCat: controller.searchCatById));
+            },
+            icon: const Icon(
+              Icons.search,
+              color: Colors.black,
+              size: 30,
+            )),
+      ],
+      centerTitle: centerTitle,
+      leading: Container(
+        decoration: const BoxDecoration(
+          shape: BoxShape.circle,
+          color: Color(0xFF030A1A),
+        ),
+        margin: const EdgeInsets.only(left: 10.0),
+        child: Image.asset(
+          'assets/splash/splash_ico.png',
+          fit: BoxFit.contain,
+          color: const Color.fromARGB(255, 255, 255, 255),
+        ),
+      ),
+      backgroundColor: backgroundColor, // Asignar un color de fondo al AppBar
+      elevation: 0,
     );
   }
 

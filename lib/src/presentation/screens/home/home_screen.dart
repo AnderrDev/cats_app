@@ -1,7 +1,7 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:cats_app/src/presentation/screens/home/home_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../infrastructure/models/the_cat_api_response.dart';
 import '../../widgets/appbar_widget.dart';
 import '../../widgets/cat_card_widget.dart';
 
@@ -15,30 +15,70 @@ class HomeScreen extends StatelessWidget {
       initState: (_) {},
       builder: (controller) {
         if (controller.isLoading.value) {
-          return const _LoadingScreen();
+          return const _LoadingScreen(opacity: false);
         }
         if (controller.catData.isEmpty) {
           return const _EmptyScreen();
         }
-        return Scaffold(
-            appBar: const AppBarWidget(
-              text: 'Cats App',
-              centerTitle: true,
-              backgroundColor: Colors.white,
-            ),
-            body: Column(children: [
-              const SizedBox(height: 10.0),
-              Expanded(child: _buildGridView(controller.catData))
-            ]));
+        return Stack(
+          children: [
+            const Scaffold(
+                appBar: AppBarWidget(
+                  text: 'Cats App',
+                  centerTitle: true,
+                  backgroundColor: Colors.white,
+                ),
+                body: Column(children: [
+                  SizedBox(height: 10.0),
+                  Expanded(child: _CatsGridList())
+                ])),
+            Obx(() => controller.isLoading.value
+                ? const _LoadingScreen(opacity: true)
+                : const SizedBox())
+          ],
+        );
       },
     );
   }
+}
 
-  Widget _buildGridView(List<CatData> catData) {
+class _CatsGridList extends StatefulWidget {
+  const _CatsGridList();
+
+  @override
+  State<_CatsGridList> createState() => _CatsGridListState();
+}
+
+class _CatsGridListState extends State<_CatsGridList> {
+  final scrollController = ScrollController();
+  final controller = Get.find<HomeController>();
+
+  @override
+  void initState() {
+    super.initState();
+
+    scrollController.addListener(() {
+      if (scrollController.position.pixels ==
+          scrollController.position.maxScrollExtent) {
+        controller.loadMoreCats();
+        setState(() {});
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return GridView.builder(
+        controller: scrollController,
         physics: const BouncingScrollPhysics(),
         padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0),
-        itemCount: catData.length,
+        itemCount: controller.catData.length,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           childAspectRatio: 1.0,
@@ -46,7 +86,7 @@ class HomeScreen extends StatelessWidget {
           mainAxisSpacing: 15.0,
         ),
         itemBuilder: (context, index) {
-          return CardWidget(index: index, catData: catData);
+          return CardWidget(index: index, catData: controller.catData);
         });
   }
 }
@@ -66,27 +106,51 @@ class _EmptyScreen extends StatelessWidget {
 }
 
 class _LoadingScreen extends StatelessWidget {
-  const _LoadingScreen();
+  final bool opacity;
+  const _LoadingScreen({required this.opacity});
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
+    return Scaffold(
+      backgroundColor: opacity ? Colors.white.withOpacity(0.8) : Colors.white,
+      body: const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            CircularProgressIndicator(
-              backgroundColor: Colors.black,
-            ),
+            _CatLoader(),
             SizedBox(
               height: 20,
             ),
             Text(
-              'Loading data please wait...',
+              'Loading cats...',
               style: TextStyle(color: Colors.black),
             )
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _CatLoader extends StatelessWidget {
+  const _CatLoader();
+
+  @override
+  Widget build(BuildContext context) {
+    return SpinPerfect(
+      infinite: true,
+      child: Container(
+        decoration: const BoxDecoration(
+          shape: BoxShape.circle,
+          color: Color(0xFF030A1A),
+        ),
+        child: Image.asset(
+          'assets/splash/splash_ico.png',
+          fit: BoxFit.contain,
+          color: const Color.fromARGB(255, 255, 255, 255),
+          width: 70.0,
+          height: 70.0,
         ),
       ),
     );
